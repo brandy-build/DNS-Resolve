@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DNS Resolver</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<script>
+document.getElementById('chatbot-form').onsubmit = async function(e) {
+    e.preventDefault();
+    const msg = document.getElementById('user_message').value;
+    const responseDiv = document.getElementById('chatbot-response');
+    responseDiv.innerHTML = '<div class="ai-chat"><em>Bot is typing...</em></div>';
+    const res = await fetch('/chatbot', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_message: msg})
+    });
+    const data = await res.json();
+    responseDiv.innerHTML = `<div class="ai-chat"><strong>You:</strong> ${msg}<br><strong>Bot:</strong> ${data.reply}</div>`;
+};
+</script>
+<body>
+    <h1>DNS Resolver Dashboard</h1>
+    <div class="center-container">
+        <div class="container">
+            <form method="POST">
+                <input type="text" name="domain" placeholder="Enter domain name" required>
+                <button type="submit">Resolve</button>
+            </form>
+            {% if result %}
+                <h2>Results for {{ domain }}</h2>
+                <ul>
+                    <li><strong>A Records:</strong> {{ result['A'] }}</li>
+                    <li><strong>AAAA Records:</strong> {{ result['AAAA'] }}</li>
+                    <li><strong>MX Records:</strong> {{ result['MX'] }}</li>
+                </ul>
+            {% endif %}
+            <hr>
+            <h2>AI Chatbot</h2>
+            <form method="POST" id="chatbot-form">
+                <input type="text" name="user_message" id="user_message" placeholder="Ask the AI anything..." required>
+                <button type="submit">Chat</button>
+            </form>
+            <div id="chatbot-response" style="margin-top:20px;">
+                {% if chat_reply %}
+                    <div class="ai-chat">
+                        <strong>You:</strong> {{ user_message }}<br>
+                        <strong>Bot:</strong> {{ chat_reply }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script>
+    document.getElementById('chatbot-form').onsubmit = async function(e) {
+        e.preventDefault();
+        const msg = document.getElementById('user_message').value;
+        const responseDiv = document.getElementById('chatbot-response');
+        responseDiv.innerHTML = '<div class="ai-chat"><em>Bot is typing...</em></div>';
+        const res = await fetch('/chatbot', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({user_message: msg})
+        });
+        const data = await res.json();
+        responseDiv.innerHTML = `<div class="ai-chat"><strong>You:</strong> ${msg}<br><strong>Bot:</strong> ${data.reply}</div>`;
+    };
+    </script>
+</body>
+</html>
