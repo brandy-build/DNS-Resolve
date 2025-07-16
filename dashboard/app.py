@@ -3,7 +3,8 @@ from resolver.resolver import resolve
 import os
 from dotenv import load_dotenv
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'chatbot')))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'chatbot')))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chatbot.bot import chat
 
 # Supabase setup
